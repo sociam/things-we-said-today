@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+   var json = (function () {
+    var json = null;
+    $.ajax({
+        'async': false,
+        'global': false,
+        //'url': 'http://quiet-cove-8120.herokuapp.com/timeseries',
+        'url': 'http://prov.usewod.org/topservatory/load.php',
+        'dataType': "json",
+        'success': function (data) {
+            json = data;
+        }
+    });
+    return json;
+})(); 
+      google.load("visualization", "1", {packages:["motionchart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        
+        data.addColumn('string', 'Social Machine');
+        data.addColumn('date', 'Date');
+        data.addColumn('string', 'Topic');
+        data.addColumn('number', 'Rank');
+        for (i = 0; i < json.length; ++i) {
+			if(json[i].rank<=10){
+				var myrank = 11-parseInt(json[i].rank,10);
+				var date = new Date(json[i].tstamp);
+				//data.addRow([json[i].sm+'-'+json[i].content, date,json[i].content,parseInt(json[i].rank,10)]);
+				data.addRow([json[i].sm+"-"+myrank, date,json[i].content,myrank]);
+			}
+		}
+
+        var chart1 = new google.visualization.MotionChart(document.getElementById('chart1_div'));
+
+        chart1.draw(data, {width: 1200, height:500});
+      }
+    </script>
+  </head>
+  <body>
+    
+<div id="chart1_div" style="width: 1200px; height: 500px;"></div>
+    
+  </body>
+</html>
