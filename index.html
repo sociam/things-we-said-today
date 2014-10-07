@@ -23,22 +23,44 @@
       function drawChart() {
         var data = new google.visualization.DataTable();
         
-        data.addColumn('string', 'Social Machine');
-        data.addColumn('date', 'Date');
         data.addColumn('string', 'Topic');
+        data.addColumn('date', 'Date');
+        data.addColumn('string', 'Social Machine');
         data.addColumn('number', 'Rank');
+        data.addColumn('number', 'Source');
+        
+        var sindex = 0;
+        var sources = {};
+
         for (i = 0; i < json.length; ++i) {
 			if(json[i].rank<=10){
 				var myrank = 11-parseInt(json[i].rank,10);
 				var date = new Date(json[i].tstamp);
+				var source = -1;
+				if (json[i].sm in sources) {
+				  source = sources[json[i].sm];
+				} else {
+				  sindex += 1;
+				  sources[json[i].sm] = sindex;
+				  source = sindex;
+				}
 				//data.addRow([json[i].sm+'-'+json[i].content, date,json[i].content,parseInt(json[i].rank,10)]);
-				data.addRow([json[i].sm+"-"+myrank, date,json[i].content,myrank]);
+				data.addRow([json[i].content, date, json[i].sm, myrank, source]);
 			}
 		}
 
         var chart1 = new google.visualization.MotionChart(document.getElementById('chart1_div'));
 
-        chart1.draw(data, {width: 1200, height:500});
+        var options = {};
+//        options['state'] = '{"xAxisOption":"4", "iconType":"BUBBLE", "sizeOption":"1", "colorOption":"2", "yAxisOption":"3", "showTrails":true}';   
+//	  {
+//	  "duration":{"timeUnit":"D","multiplier":1},
+//	  "dimensions":{"iconDimensions":["dim0"]},
+//	  }
+	  
+	options['width'] = 1500;
+	options['height'] = 900;
+        chart1.draw(data, options);
       }
     </script>
   </head>
