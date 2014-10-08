@@ -53,6 +53,9 @@ function get_and_write() {
   $reuters_uk = "https://api.import.io/store/data/6a694fc9-63fa-4b69-9406-9a32d2f0c631/_query?input/webpage/url=http%3A%2F%2Fuk.reuters.com%2Fnews%2Farchive%2FworldNews%3Fview%3Dpage&_user=3c60555f-c805-4ac9-9343-4e115624bc6a&_apikey=PlT6w%2FVTTluKIPHAmfD73mZT0X49XJ0mYRSP%2BOEfNudJpz9OZhFf0RnRzQUoeuNVmPJC2RHjzNs1VB%2FNNOyNag%3D%3D";
   write_data($reuters_uk, "reuters_uk", "reuters uk");
   
+  $digg = "https://api.import.io/store/data/4612a1ba-dd0a-4856-827f-a931af55a8f8/_query?input/webpage/url=http%3A%2F%2Fdigg.com%2F&_user=06f7ccbe-2094-43e3-b58b-bfc6ddae660a&_apikey=TBVNWMPuIjVy6OdGQydfbEnBADwuF7rKU66T9dAk9ItTy4nHeW0SchN%2BN2pCMekSeaFCBxwmsQ6Gcxg5L%2FdzzQ%3D%3D";
+write_data($digg, "newsitem", "digg");
+  
   // add more sources here 
 }
 

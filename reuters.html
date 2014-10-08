@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+   var json = (function () {
+    var json = null;
+    $.ajax({
+        'async': false,
+        'global': false,
+        //'url': 'http://quiet-cove-8120.herokuapp.com/timeseries',
+        'url': 'http://prov.usewod.org/topservatory/load.php',
+        'dataType': "json",
+        'success': function (data) {
+            json = data;
+        }
+    });
+    return json;
+})(); 
+      google.load("visualization", "1", {packages:["motionchart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        
+        data.addColumn('string', 'Topic');
+        data.addColumn('date', 'Date');
+        data.addColumn('string', 'Social Machine');
+        data.addColumn('number', 'Rank');
+        data.addColumn('number', 'Source');
+        
+        var sindex = 0;
+        var sources = {};
+
+        for (i = 0; i < json.length; ++i) {
+			if(json[i].rank<=10){
+				var myrank = 11-parseInt(json[i].rank,10);
+				var date = new Date(json[i].tstamp);
+				var source = -1;
+				if (json[i].sm === "reuters us" || json[i].sm === "reuters uk") {
+				  if (json[i].sm in sources) {
+				    source = sources[json[i].sm];
+				  } else {
+				    sindex += 1;
+				    sources[json[i].sm] = sindex;
+				    source = sindex;
+				  }
+//				  data.addRow([json[i].content, date, json[i].sm, myrank]);
+				  data.addRow([json[i].content, date, json[i].sm, myrank, source]);
+				}
+			}
+		}
+
+        var chart1 = new google.visualization.MotionChart(document.getElementById('chart1_div'));
+
+        var options = {};
+//        options['state'] = '{"xAxisOption":"4", "iconType":"BUBBLE", "sizeOption":"1", "colorOption":"2", "yAxisOption":"3", "showTrails":true}';   
+//	  {
+//	  "duration":{"timeUnit":"D","multiplier":1},
+//	  "dimensions":{"iconDimensions":["dim0"]},
+//	  }
+	  
+	options['width'] = 800;
+	options['height'] = 600;
+        chart1.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    
+<div id="chart1_div" style="width: 1200px; height: 500px;"></div>
+    
+  </body>
+</html>
